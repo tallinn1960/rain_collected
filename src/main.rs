@@ -19,24 +19,39 @@ fn compute_rain_collected(terrain: &[i32]) -> i32 {
         .unwrap()
         .0;
 
+    struct State {
+        max: i32,
+        water: i32,
+    }
+
+    // water + terrain create a stair up to the maximum elevation
+    // the elevation of each step of the stair is the maximum elevation seen so far
+    // we calculate the water collected on the left side of the maximum elevation
+    // this is given by the difference between the elevation of the current step and the actual elevation
     let r1 = terrain[..index_maximum]
         .iter()
-        .scan(0, |acc, &x| {
-            *acc = x.max(*acc);
-            Some(*acc)
+        .fold(State { max: 0, water: 0 }, |acc, &x| {
+            let newmax = x.max(acc.max); // update the maximum elevation seen so far
+            State {
+                max: newmax,
+                water: acc.water + (newmax - x),
+            }
         })
-        .enumerate()
-        .fold(0, |acc, (i, x)| acc + (x - terrain[i]));
+        .water;
 
+    // this time we calculate the water collected on the right side of the maximum elevation
+    // we do this by iterating the terrain in reverse order applying the same fold operation
     let r2 = terrain[index_maximum..]
         .iter()
         .rev()
-        .scan(0, |acc, &x| {
-            *acc = x.max(*acc);
-            Some(*acc)
+        .fold(State { max: 0, water: 0 }, |acc, &x| {
+            let newmax = x.max(acc.max);
+            State {
+                max: newmax,
+                water: acc.water + (newmax - x),
+            }
         })
-        .enumerate()
-        .fold(0, |acc, (i, x)| acc + (x - terrain[n - 1 - i]));
+        .water;
 
     r1 + r2
 }
