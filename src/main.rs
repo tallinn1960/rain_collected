@@ -1,12 +1,13 @@
 #![allow(missing_docs)]
 
+
 fn main() {
     let terrain = [1, 4, 2, 5, 3, 6, 4, 7];
     let rain_collected = compute_rain_collected(&terrain);
     println!("Rain collected: {}", rain_collected);
 }
 
-fn compute_rain_collected(terrain: &[i32]) -> i32 {
+fn compute_rain_collected(terrain: &[i64]) -> u64 {
     let n = terrain.len();
     if n < 3 {
         return 0;
@@ -16,25 +17,26 @@ fn compute_rain_collected(terrain: &[i32]) -> i32 {
         .iter()
         .enumerate()
         .max_by_key(|&(_, v)| v)
-        .unwrap()
+        .unwrap() // since we ensured above that terrain isn't empty, this is safe
         .0;
 
     struct State {
-        max: i32,
-        water: i32,
+        max: i64,
+        water: u64,
     }
 
-    // water + terrain create a stair up to the maximum elevation
-    // the elevation of each step of the stair is the maximum elevation seen so far
+    // water + terrain create a stair up left to the maximum elevation and a stair down right to the maximum elevation
+    // the elevation of each step of the stair is the maximum elevation seen so far walking towards the maximum elevation
+    // water collected is determined by the difference between the elevation of the current step and the actual elevation
+
     // we calculate the water collected on the left side of the maximum elevation
-    // this is given by the difference between the elevation of the current step and the actual elevation
     let r1 = terrain[..index_maximum]
         .iter()
-        .fold(State { max: 0, water: 0 }, |acc, &x| {
+        .fold(State { max: i64::MIN, water: 0 }, |acc, &x| {
             let newmax = x.max(acc.max); // update the maximum elevation seen so far
             State {
                 max: newmax,
-                water: acc.water + (newmax - x),
+                water: acc.water + (newmax - x) as u64, // newmax will always be greater or equal to x
             }
         })
         .water;
@@ -44,11 +46,11 @@ fn compute_rain_collected(terrain: &[i32]) -> i32 {
     let r2 = terrain[index_maximum..]
         .iter()
         .rev()
-        .fold(State { max: 0, water: 0 }, |acc, &x| {
+        .fold(State { max: i64::MIN, water: 0 }, |acc, &x| {
             let newmax = x.max(acc.max);
             State {
                 max: newmax,
-                water: acc.water + (newmax - x),
+                water: acc.water + (newmax - x) as u64,
             }
         })
         .water;
@@ -94,8 +96,8 @@ mod tests {
     #[test]
     fn calculate_execution_time() {
         use std::time::Instant;
-        // generate a large terrain with 1000 randome elevations between 0 and 100
-        let terrain: Vec<i32> = (0..10000).map(|_| rand::random::<i32>() % 100).collect();
+        // generate a large terrain with 10000 randome elevations between 0 and 100
+        let terrain: Vec<i64> = (0..10000).map(|_| rand::random::<i64>() % 100).collect();
 
         let start_time = Instant::now();
         compute_rain_collected(&terrain);
