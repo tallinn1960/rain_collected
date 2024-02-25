@@ -1,5 +1,4 @@
-#![allow(missing_docs)]
-
+//! rain_collected
 fn main() {
     let terrain = [1, 4, 2, 5, 3, 6, 4, 7];
     let rain_collected = compute_rain_collected(&terrain);
@@ -8,11 +7,16 @@ fn main() {
     println!("Rain collected parallel: {}", rain_collected_parallel);
 }
 
+/// Compute the capacity of water that can be collected in the given terrain.
 fn compute_rain_collected(terrain: &[i64]) -> u64 {
     let n = terrain.len();
     if n < 3 {
         return 0;
     }
+
+    // Water + terrain create a stair up left to the maximum elevation and a stair down right to the maximum elevation.
+    // The elevation of each step of the stair is the maximum elevation seen so far walking towards the maximum elevation from either side.
+    // Water collected is determined by the difference between the elevation of the current step and the actual elevation.
 
     let index_maximum = terrain
         .iter()
@@ -21,45 +25,40 @@ fn compute_rain_collected(terrain: &[i64]) -> u64 {
         .unwrap() // since we ensured above that terrain isn't empty, this is safe
         .0;
 
-    let (leftside, rightside) = terrain.split_at(index_maximum);
+    let (terrain_left_of_max_elevation, terrain_right_of_max_elevation) =
+        terrain.split_at(index_maximum);
 
-    // water + terrain create a stair up left to the maximum elevation and a stair down right to the maximum elevation
-    // the elevation of each step of the stair is the maximum elevation seen so far walking towards the maximum elevation
-    // water collected is determined by the difference between the elevation of the current step and the actual elevation
-
-    // we calculate the water collected on the left side of the maximum elevation
-    let r1 = leftside
+    // We calculate the water collected on the left side of the maximum elevation.
+    let water_capacity_left = terrain_left_of_max_elevation
         .iter()
         .fold(
             (
-                i64::MIN, // tracks maximum elevation
-                0u64,     // tracks water collected
+                i64::MIN, // .0: tracks maximum elevation
+                0u64,     // .1: tracks water collected
             ),
             |acc, &x| {
-                let newmax = x.max(acc.0); // update the maximum elevation seen so far
-                (newmax, acc.1 + (newmax - x) as u64) // newmax will always be greater as or equal to x,
-                                                      // which makes the cast safe
+                let stepsize = x.max(acc.0); // update the maximum elevation seen so far
+                (stepsize, acc.1 + (stepsize - x) as u64) // stepsize will always be greater as or equal to x,
+                                                          // which makes the cast safe
             },
         )
-        .1;
+        .1; // we are only interested in the water collected
 
-    // this time we calculate the water collected on the right side of the maximum elevation
-    // we do this by iterating the terrain applying the same fold operation in reverse order
-    let r2 = rightside
+    // This time we calculate the water collected on the right side of the maximum elevation.
+    // We do this by iterating the terrain right to the max elevation applying the same fold operation in reverse order.
+    let water_capacity_right = terrain_right_of_max_elevation
         .iter()
         .rfold((i64::MIN, 0u64), |acc, &x| {
-            let newmax = x.max(acc.0);
-            (newmax, acc.1 + (newmax - x) as u64)
+            let stepsize = x.max(acc.0);
+            (stepsize, acc.1 + (stepsize - x) as u64)
         })
         .1;
 
-    r1 + r2
+    water_capacity_left + water_capacity_right
 }
 
-// this function is the same as compute_rain_collected but uses rayon to parallelize the computation
-// the parallelization is achieved by using rayon's scope function to spawn two threads that calculate the water collected on the left and right side of the maximum elevation
-// the results are then joined and summed
-// this is indeed much slower than the sequential version
+/// This function is the same as compute_rain_collected but uses threads to parallelize the computation.
+/// This is suprisingly much slower than the sequential version.
 fn compute_rain_collected_parallel(terrain: &[i64]) -> u64 {
     let n = terrain.len();
     if n < 3 {
@@ -70,54 +69,34 @@ fn compute_rain_collected_parallel(terrain: &[i64]) -> u64 {
         .iter()
         .enumerate()
         .max_by_key(|&(_, v)| v)
-        .unwrap() // since we ensured above that terrain isn't empty, this is safe
+        .unwrap()
         .0;
 
+    let (terrain_left_of_max_elevation, terrain_right_of_max_elevation) =
+        terrain.split_at(index_maximum);
+
     std::thread::scope(|s| {
-        let (leftside, rightside) = terrain.split_at(index_maximum);
-
-        // water + terrain create a stair up left to the maximum elevation and a stair down right to the maximum elevation
-        // the elevation of each step of the stair is the maximum elevation seen so far walking towards the maximum elevation
-        // water collected is determined by the difference between the elevation of the current step and the actual elevation
-
-        // we calculate the water collected on the left side of the maximum elevation
-        let left = s.spawn(|| {
-            leftside
+        let water_capacity_left = s.spawn(|| {
+            terrain_left_of_max_elevation
                 .iter()
-                .fold(
-                    (
-                        i64::MIN, // tracks maximum elevation
-                        0u64,     // tracks water collected
-                    ),
-                    |acc, &x| {
-                        let newmax = x.max(acc.0); // update the maximum elevation seen so far
-                        (newmax, acc.1 + (newmax - x) as u64) // newmax will always be greater as or equal to x,
-                                                              // which makes the cast safe
-                    },
-                )
+                .fold((i64::MIN, 0u64), |acc, &x| {
+                    let stepsize = x.max(acc.0);
+                    (stepsize, acc.1 + (stepsize - x) as u64)
+                })
                 .1
         });
 
-        // here we calculate the water collected on the right side of the maximum elevation
-        // we do this by iterating the terrain in reverse order applying the same fold operation
-        let right = s.spawn(|| {
-            rightside
+        let water_capacity_right = s.spawn(|| {
+            terrain_right_of_max_elevation
                 .iter()
-                .rfold(
-                    (
-                        i64::MIN, // tracks maximum elevation
-                        0u64,     // tracks water collected
-                    ),
-                    |acc, &x| {
-                        let newmax = x.max(acc.0); // update the maximum elevation seen so far
-                        (newmax, acc.1 + (newmax - x) as u64) // newmax will always be greater as or equal to x,
-                                                              // which makes the cast safe
-                    },
-                )
+                .rfold((i64::MIN, 0u64), |acc, &x| {
+                    let stepsize = x.max(acc.0);
+                    (stepsize, acc.1 + (stepsize - x) as u64)
+                })
                 .1
         });
 
-        left.join().unwrap() + right.join().unwrap()
+        water_capacity_left.join().unwrap() + water_capacity_right.join().unwrap()
     })
 }
 
@@ -154,6 +133,10 @@ mod tests {
         // Test case 7: Terrain with only three elevations
         let terrain7 = [2, 1, 2];
         assert_eq!(compute_rain_collected(&terrain7), 1);
+
+        // Test case 8: Terrain with a plateau at maximum elevation
+        let terrain8 = [5, 4, 2, 6, 6, 6, 4, 5];
+        assert_eq!(compute_rain_collected(&terrain8), 5);
     }
 
     const N: usize = 10000;
