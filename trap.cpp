@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <cassert>
 #include <iterator>
@@ -15,22 +16,22 @@ int trap(vector<int> &v)
     }
 
     vector u(v.size(), 0);
-    
+
     auto it = max_element(begin(v), end(v));
-    
+
     inclusive_scan(begin(v), next(it), begin(u),
                    [](auto a, auto b)
     {
         return max(a, b);
     });
-    
+
     inclusive_scan(rbegin(v), reverse_iterator(it),
                    rbegin(u),
                    [](auto a, auto b)
     {
         return max(a, b);
     });
-    
+
     return transform_reduce(cbegin(u), cend(u), cbegin(v), 0,
                             std::plus<>(),
                             std::minus<>());
@@ -86,6 +87,31 @@ int main()
         cout << "Test case 6 passed." << endl;
     }
 
+    // Test case 7: Randomly filled vector, time measurement
+    {
+        int N = 100000; // Set the size of the vector
+        vector<int> v(N);
+
+        // Fill the vector with random integers modulo N
+        for (int i = 0; i < N; i++) {
+            v[i] = rand() % N;
+        }
+
+        // Start the timer
+        auto start = std::chrono::high_resolution_clock::now();
+
+        // Call the trap function
+        int result = trap(v);
+
+        // Stop the timer
+        auto end = std::chrono::high_resolution_clock::now();
+
+        // Calculate the duration
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+        // Print the result and duration
+        cout << "Time taken: " << duration << " microseconds" << endl;
+    }
     cout << "All test cases passed." << endl;
 
     return 0;
