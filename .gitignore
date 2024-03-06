@@ -1,2 +1,7 @@
 target/
 .DS_Store
+.cache
+.vscode
+build
+trap
+.idea
