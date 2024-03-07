@@ -3,5 +3,4 @@ target/
 .cache
 .vscode
 build
-trap
 .idea

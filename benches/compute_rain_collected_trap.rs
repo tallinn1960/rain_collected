@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use criterion::{criterion_group, criterion_main, Criterion};
 use rain_collected::{
-    compute_rain_collected, compute_rain_collected2, compute_rain_collected3, trap, trap_v, trap_unsafe
+    compute_rain_collected, compute_rain_collected2, compute_rain_collected3, trap, trap_cpp, trap_unsafe, trap_v
 };
 
 fn bench_compute_rain_collected_trap(c: &mut Criterion) {
@@ -16,6 +16,7 @@ fn bench_compute_rain_collected_trap(c: &mut Criterion) {
     });
     group.bench_function("trap", |b| b.iter(|| trap(&terrain)));
     group.bench_function("trap_unsafe", |b| b.iter(|| trap_unsafe(&terrain)));
+    group.bench_function("trap_cpp", |b| b.iter(|| trap_cpp(&terrain)));
 
     group.bench_function("compute_rain_collected2", |b| {
         b.iter_batched(

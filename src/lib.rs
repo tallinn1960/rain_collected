@@ -227,9 +227,9 @@ pub fn trap_unsafe(height: &[i64]) -> u64 {
 
     while left < right {
         unsafe {
-            let leftv = height.get_unchecked(left);
-            let rightv = height.get_unchecked(right);
-            pool_height = pool_height.max(*leftv.min(rightv));
+            let leftv = *height.get_unchecked(left);
+            let rightv = *height.get_unchecked(right);
+            pool_height = pool_height.max(leftv.min(rightv));
             if leftv <= rightv {
                 trapped += 0.max(pool_height - leftv) as u64;
                 left += 1;
@@ -241,6 +241,22 @@ pub fn trap_unsafe(height: &[i64]) -> u64 {
     }
 
     trapped
+}
+
+/// C++ solution from leetcode
+extern crate libc;
+
+#[link(name = "trap", kind = "dylib")]
+extern "C" {
+    fn trap_cpp_ffi(v: *mut libc::c_long, size: libc::size_t) -> libc::c_ulong;
+}
+/// trap function from C++
+#[allow(unsafe_code)]
+pub fn trap_cpp(v: &[i64]) -> u64 {
+    // Test case: Call the trap function from Rust
+    let size = v.len();
+    let result = unsafe { trap_cpp_ffi(v.as_ptr() as *mut libc::c_long, size) };
+    result
 }
 
 #[cfg(test)]
@@ -284,7 +300,7 @@ mod tests {
     }
 
     #[test]
-    fn test_trap2() {
+    fn test_trap() {
         let terrain1 = [0, 0, 0, 0, 0];
         assert_eq!(trap(&terrain1), 0);
 
@@ -317,5 +333,185 @@ mod tests {
 
         let terrain11 = [0, -6, 0, -2, 8, -9, 0, 8, 9, -5];
         assert_eq!(trap(&terrain11), 33);
+    }
+
+    #[test]
+    fn test_trap_unsafe() {
+        let terrain1 = [0, 0, 0, 0, 0];
+        assert_eq!(trap_unsafe(&terrain1), 0);
+
+        let terrain2 = [1, 2, 3, 4, 5];
+        assert_eq!(trap_unsafe(&terrain2), 0);
+
+        let terrain3 = [5, 4, 3, 2, 1];
+        assert_eq!(trap_unsafe(&terrain3), 0);
+
+        let terrain4 = [1, 2, 3, 2, 1];
+        assert_eq!(trap_unsafe(&terrain4), 0);
+
+        let terrain5 = [1, 2, 3, 2, 4, 1];
+        assert_eq!(trap_unsafe(&terrain5), 1);
+
+        let terrain6 = [1, 4, 2, 5, 3, 6, 4, 7];
+        assert_eq!(trap_unsafe(&terrain6), 6);
+
+        let terrain7 = [2, 1, 2];
+        assert_eq!(trap_unsafe(&terrain7), 1);
+
+        let terrain8 = [5, 4, 2, 6, 6, 6, 4, 5];
+        assert_eq!(trap_unsafe(&terrain8), 5);
+
+        let terrain9 = [0, 1, -1, 2, 1, 0, 1, 3, 2, 1, 2, 1];
+        assert_eq!(trap_unsafe(&terrain9), 7);
+
+        let terrain10 = [4, 2, 0, 3, 2, 5];
+        assert_eq!(trap_unsafe(&terrain10), 9);
+
+        let terrain11 = [0, -6, 0, -2, 8, -9, 0, 8, 9, -5];
+        assert_eq!(trap_unsafe(&terrain11), 33);
+    }
+
+    #[test]
+    fn test_trap_cpp() {
+        let terrain1 = [0, 0, 0, 0, 0];
+        assert_eq!(trap_cpp(&terrain1), 0);
+
+        let terrain2 = [1, 2, 3, 4, 5];
+        assert_eq!(trap_cpp(&terrain2), 0);
+
+        let terrain3 = [5, 4, 3, 2, 1];
+        assert_eq!(trap_cpp(&terrain3), 0);
+
+        let terrain4 = [1, 2, 3, 2, 1];
+        assert_eq!(trap_cpp(&terrain4), 0);
+
+        let terrain5 = [1, 2, 3, 2, 4, 1];
+        assert_eq!(trap_cpp(&terrain5), 1);
+
+        let terrain6 = [1, 4, 2, 5, 3, 6, 4, 7];
+        assert_eq!(trap_cpp(&terrain6), 6);
+
+        let terrain7 = [2, 1, 2];
+        assert_eq!(trap(&terrain7), 1);
+
+        let terrain8 = [5, 4, 2, 6, 6, 6, 4, 5];
+        assert_eq!(trap_cpp(&terrain8), 5);
+
+        let terrain9 = [0, 1, -1, 2, 1, 0, 1, 3, 2, 1, 2, 1];
+        assert_eq!(trap_cpp(&terrain9), 7);
+
+        let terrain10 = [4, 2, 0, 3, 2, 5];
+        assert_eq!(trap_cpp(&terrain10), 9);
+
+        let terrain11 = [0, -6, 0, -2, 8, -9, 0, 8, 9, -5];
+        assert_eq!(trap_cpp(&terrain11), 33);
+    }
+    
+    #[test]
+    fn test_compute_rain_collected2() {
+        let terrain1 = vec![0, 0, 0, 0, 0];
+        assert_eq!(compute_rain_collected2(terrain1), 0);
+
+        let terrain2 = vec![1, 2, 3, 4, 5];
+        assert_eq!(compute_rain_collected2(terrain2), 0);
+
+        let terrain3 = vec![5, 4, 3, 2, 1];
+        assert_eq!(compute_rain_collected2(terrain3), 0);
+
+        let terrain4 = vec![1, 2, 3, 2, 1];
+        assert_eq!(compute_rain_collected2(terrain4), 0);
+
+        let terrain5 = vec![1, 2, 3, 2, 4, 1];
+        assert_eq!(compute_rain_collected2(terrain5), 1);
+
+        let terrain6 = vec![1, 4, 2, 5, 3, 6, 4, 7];
+        assert_eq!(compute_rain_collected2(terrain6), 6);
+
+        let terrain7 = vec![2, 1, 2];
+        assert_eq!(compute_rain_collected2(terrain7), 1);
+
+        let terrain8 = vec![5, 4, 2, 6, 6, 6, 4, 5];
+        assert_eq!(compute_rain_collected2(terrain8), 5);
+
+        let terrain9 = vec![0, 1, -1, 2, 1, 0, 1, 3, 2, 1, 2, 1];
+        assert_eq!(compute_rain_collected2(terrain9), 7);
+
+        let terrain10 = vec![4, 2, 0, 3, 2, 5];
+        assert_eq!(compute_rain_collected2(terrain10), 9);
+
+        let terrain11 = vec![0, -6, 0, -2, 8, -9, 0, 8, 9, -5];
+        assert_eq!(compute_rain_collected2(terrain11), 33);
+    }
+
+    #[test]
+    fn test_compute_rain_collected3() {
+        let terrain1 = [0, 0, 0, 0, 0];
+        assert_eq!(compute_rain_collected3(&terrain1), 0);
+
+        let terrain2 = [1, 2, 3, 4, 5];
+        assert_eq!(compute_rain_collected3(&terrain2), 0);
+
+        let terrain3 = [5, 4, 3, 2, 1];
+        assert_eq!(compute_rain_collected3(&terrain3), 0);
+
+        let terrain4 = [1, 2, 3, 2, 1];
+        assert_eq!(compute_rain_collected3(&terrain4), 0);
+
+        let terrain5 = [1, 2, 3, 2, 4, 1];
+        assert_eq!(compute_rain_collected3(&terrain5), 1);
+
+        let terrain6 = [1, 4, 2, 5, 3, 6, 4, 7];
+        assert_eq!(compute_rain_collected3(&terrain6), 6);
+
+        let terrain7 = [2, 1, 2];
+        assert_eq!(compute_rain_collected3(&terrain7), 1);
+
+        let terrain8 = [5, 4, 2, 6, 6, 6, 4, 5];
+        assert_eq!(compute_rain_collected3(&terrain8), 5);
+
+        let terrain9 = [0, 1, -1, 2, 1, 0, 1, 3, 2, 1, 2, 1];
+        assert_eq!(compute_rain_collected3(&terrain9), 7);
+
+        let terrain10 = [4, 2, 0, 3, 2, 5];
+        assert_eq!(compute_rain_collected3(&terrain10), 9);
+
+        let terrain11 = [0, -6, 0, -2, 8, -9, 0, 8, 9, -5];
+        assert_eq!(compute_rain_collected3(&terrain11), 33);
+    }
+
+    #[test]
+    fn test_trap_v() {
+        let terrain1 = vec![0, 0, 0, 0, 0];
+        assert_eq!(trap_v(terrain1), 0);
+
+        let terrain2 = vec![1, 2, 3, 4, 5];
+        assert_eq!(trap_v(terrain2), 0);
+
+        let terrain3 = vec![5, 4, 3, 2, 1];
+        assert_eq!(trap_v(terrain3), 0);
+
+        let terrain4 = vec![1, 2, 3, 2, 1];
+        assert_eq!(trap_v(terrain4), 0);
+
+        let terrain5 = vec![1, 2, 3, 2, 4, 1];
+        assert_eq!(trap_v(terrain5), 1);
+
+        let terrain6 = vec![1, 4, 2, 5, 3, 6, 4, 7];
+        assert_eq!(trap_v(terrain6), 6);
+
+        let terrain7 = vec![2, 1, 2];
+        assert_eq!(trap_v(terrain7), 1);
+
+        let terrain8 = vec![5, 4, 2, 6, 6, 6, 4, 5];
+        assert_eq!(trap_v(terrain8), 5);
+
+        let terrain9 = vec![0, 1, -1, 2, 1, 0, 1, 3, 2, 1, 2, 1];
+        assert_eq!(trap_v(terrain9), 7);
+
+        let terrain10 = vec![4, 2, 0, 3, 2, 5];
+        assert_eq!(trap_v(terrain10), 9);
+
+        let terrain11 = vec![0, -6, 0, -2, 8, -9, 0, 8, 9, -5];
+        assert_eq!(trap_v(terrain11), 33);
     }
 }
