@@ -4,3 +4,4 @@ target/
 .vscode
 build
 trap
+.idea
