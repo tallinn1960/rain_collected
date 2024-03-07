@@ -129,7 +129,6 @@ pub fn compute_rain_collected2(height: Vec<i64>) -> u64 {
         .1 // we are only interested in the water collected}
 }
 
-
 /// previous solution
 pub fn compute_rain_collected3(terrain: &[i64]) -> u64 {
     let n = terrain.len();
@@ -214,6 +213,30 @@ pub fn trap_v(height: Vec<i64>) -> u64 {
         } else {
             trapped += 0.max(pool_height - height[right]) as u64;
             right -= 1;
+        }
+    }
+
+    trapped
+}
+#[allow(unsafe_code)]
+/// fastest solution from leetcode, avoiding bounds checks
+pub fn trap_unsafe(height: &[i64]) -> u64 {
+    let (mut left, mut right) = (0, height.len() - 1);
+    let mut pool_height = i64::MIN;
+    let mut trapped = 0u64;
+
+    while left < right {
+        unsafe {
+            let leftv = height.get_unchecked(left);
+            let rightv = height.get_unchecked(right);
+            pool_height = pool_height.max(*leftv.min(rightv));
+            if leftv <= rightv {
+                trapped += 0.max(pool_height - leftv) as u64;
+                left += 1;
+            } else {
+                trapped += 0.max(pool_height - rightv) as u64;
+                right -= 1;
+            }
         }
     }
 
