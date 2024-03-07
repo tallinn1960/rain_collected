@@ -200,6 +200,26 @@ pub fn trap(height: &[i64]) -> u64 {
     trapped
 }
 
+/// fastest solution from leetcode, consuming input
+pub fn trap_v(height: Vec<i64>) -> u64 {
+    let (mut left, mut right) = (0, height.len() - 1);
+    let mut pool_height = i64::MIN;
+    let mut trapped = 0u64;
+
+    while left < right {
+        pool_height = pool_height.max(height[left].min(height[right]));
+        if height[left] <= height[right] {
+            trapped += 0.max(pool_height - height[left]) as u64;
+            left += 1;
+        } else {
+            trapped += 0.max(pool_height - height[right]) as u64;
+            right -= 1;
+        }
+    }
+
+    trapped
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
