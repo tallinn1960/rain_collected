@@ -246,7 +246,7 @@ pub fn trap_unsafe(height: &[i64]) -> u64 {
 /// C++ solution from leetcode
 extern crate libc;
 
-#[link(name = "trap", kind = "dylib")]
+#[link(name = "trap", kind = "static")]
 extern "C" {
     fn trap_cpp_ffi(v: *mut libc::c_long, size: libc::size_t) -> libc::c_ulong;
 }
