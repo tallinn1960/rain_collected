@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int trap(std::span<long> v)
+unsigned long trap(std::span<long> v)
 {
     if (v.size() < 3)
     {
@@ -36,7 +36,7 @@ int trap(std::span<long> v)
 }
 
 extern "C" {
-    int trap_cpp_ffi(long* height, int heightSize) {
+    unsigned long trap_cpp_ffi(long* height, int heightSize) {
         std::span<long> v(height, heightSize);
         return trap(v);
     }
