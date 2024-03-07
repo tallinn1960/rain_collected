@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 3.12)
-project(trap)
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_INSTALL_PREFIX .)
-add_library(trap SHARED trap.cpp)
-install(TARGETS trap DESTINATION ..)

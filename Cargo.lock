@@ -344,6 +344,7 @@ dependencies = [
 name = "rain_collected"
 version = "0.1.0"
 dependencies = [
+ "cc",
  "cmake",
  "criterion",
  "libc",

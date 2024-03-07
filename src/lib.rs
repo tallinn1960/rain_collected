@@ -95,12 +95,12 @@ pub fn compute_rain_collected(height: &[i64]) -> u64 {
 /// The amount of rain that can be trapped in the terrain.
 /// # Example
 /// ```
-/// use rain_collected::compute_rain_collected2;
+/// use rain_collected::compute_rain_collected_v;
 /// let terrain = vec![1, 4, 2, 5, 3, 6, 4, 7];
-/// let water_capacity = compute_rain_collected2(terrain);
+/// let water_capacity = compute_rain_collected_v(terrain);
 /// assert_eq!(water_capacity, 6);
 /// ```
-pub fn compute_rain_collected2(height: Vec<i64>) -> u64 {
+pub fn compute_rain_collected_v(height: Vec<i64>) -> u64 {
     let mut hiter = height.into_iter();
 
     std::iter::repeat(())
@@ -244,33 +244,26 @@ pub fn trap_unsafe(height: &[i64]) -> u64 {
     trapped
 }
 
-/// C++ solution from leetcode
-extern crate libc;
-
-#[link(name = "trap", kind = "dylib")]
+#[link(name = "trap", kind = "static")]
 extern "C" {
     fn trap_cpp_ffi(v: *mut libc::c_long, size: libc::size_t) -> libc::c_ulong;
 }
-/// trap function from C++
+
+/// trap function from C++, CppCon version
 #[allow(unsafe_code)]
 pub fn trap_cpp(v: &[i64]) -> u64 {
-    // Test case: Call the trap function from Rust
-    let size = v.len();
-    let result = unsafe { trap_cpp_ffi(v.as_ptr() as *mut libc::c_long, size) };
-    result
+    unsafe { trap_cpp_ffi(v.as_ptr() as *mut libc::c_long, v.len()) }
 }
 
-#[link(name = "trap", kind = "dylib")]
+#[link(name = "trap", kind = "static")]
 extern "C" {
     fn trap_cpp_dp_ffi(v: *mut libc::c_long, size: libc::size_t) -> libc::c_ulong;
 }
-/// trap function from C++, dp version
+
+/// trap function from C++, dp version from leetcode
 #[allow(unsafe_code)]
 pub fn trap_cpp_dp(v: &[i64]) -> u64 {
-    // Test case: Call the trap function from Rust
-    let size = v.len();
-    let result = unsafe { trap_cpp_dp_ffi(v.as_ptr() as *mut libc::c_long, size) };
-    result
+    unsafe { trap_cpp_dp_ffi(v.as_ptr() as *mut libc::c_long, v.len()) }
 }
 
 #[cfg(test)]
@@ -424,37 +417,37 @@ mod tests {
     #[test]
     fn test_compute_rain_collected2() {
         let terrain1 = vec![0, 0, 0, 0, 0];
-        assert_eq!(compute_rain_collected2(terrain1), 0);
+        assert_eq!(compute_rain_collected_v(terrain1), 0);
 
         let terrain2 = vec![1, 2, 3, 4, 5];
-        assert_eq!(compute_rain_collected2(terrain2), 0);
+        assert_eq!(compute_rain_collected_v(terrain2), 0);
 
         let terrain3 = vec![5, 4, 3, 2, 1];
-        assert_eq!(compute_rain_collected2(terrain3), 0);
+        assert_eq!(compute_rain_collected_v(terrain3), 0);
 
         let terrain4 = vec![1, 2, 3, 2, 1];
-        assert_eq!(compute_rain_collected2(terrain4), 0);
+        assert_eq!(compute_rain_collected_v(terrain4), 0);
 
         let terrain5 = vec![1, 2, 3, 2, 4, 1];
-        assert_eq!(compute_rain_collected2(terrain5), 1);
+        assert_eq!(compute_rain_collected_v(terrain5), 1);
 
         let terrain6 = vec![1, 4, 2, 5, 3, 6, 4, 7];
-        assert_eq!(compute_rain_collected2(terrain6), 6);
+        assert_eq!(compute_rain_collected_v(terrain6), 6);
 
         let terrain7 = vec![2, 1, 2];
-        assert_eq!(compute_rain_collected2(terrain7), 1);
+        assert_eq!(compute_rain_collected_v(terrain7), 1);
 
         let terrain8 = vec![5, 4, 2, 6, 6, 6, 4, 5];
-        assert_eq!(compute_rain_collected2(terrain8), 5);
+        assert_eq!(compute_rain_collected_v(terrain8), 5);
 
         let terrain9 = vec![0, 1, -1, 2, 1, 0, 1, 3, 2, 1, 2, 1];
-        assert_eq!(compute_rain_collected2(terrain9), 7);
+        assert_eq!(compute_rain_collected_v(terrain9), 7);
 
         let terrain10 = vec![4, 2, 0, 3, 2, 5];
-        assert_eq!(compute_rain_collected2(terrain10), 9);
+        assert_eq!(compute_rain_collected_v(terrain10), 9);
 
         let terrain11 = vec![0, -6, 0, -2, 8, -9, 0, 8, 9, -5];
-        assert_eq!(compute_rain_collected2(terrain11), 33);
+        assert_eq!(compute_rain_collected_v(terrain11), 33);
     }
 
     #[test]
