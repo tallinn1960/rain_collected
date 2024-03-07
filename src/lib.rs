@@ -129,6 +129,57 @@ pub fn compute_rain_collected2(height: Vec<i64>) -> u64 {
         .1 // we are only interested in the water collected}
 }
 
+
+/// previous solution
+pub fn compute_rain_collected3(terrain: &[i64]) -> u64 {
+    let n = terrain.len();
+    if n < 3 {
+        return 0;
+    }
+
+    // Water + terrain create a stair up left to the maximum elevation and a stair down right to the maximum elevation.
+    // The elevation of each step of the stair is the maximum elevation seen so far walking towards the maximum elevation from either side.
+    // Water collected is determined by the difference between the elevation of the current step and the actual elevation.
+
+    let index_maximum = terrain
+        .iter()
+        .enumerate()
+        .max_by_key(|&(_, v)| v)
+        .unwrap() // since we ensured above that terrain isn't empty, this is safe
+        .0;
+
+    let (terrain_left_of_max_elevation, terrain_right_of_max_elevation) =
+        terrain.split_at(index_maximum);
+
+    // We calculate the water collected on the left side of the maximum elevation.
+    let water_capacity_left = terrain_left_of_max_elevation
+        .iter()
+        .fold(
+            (
+                i64::MIN, // .0: tracks maximum elevation
+                0u64,     // .1: tracks water collected
+            ),
+            |acc, &x| {
+                let stepsize = x.max(acc.0); // update the maximum elevation seen so far
+                (stepsize, acc.1 + (stepsize - x) as u64) // stepsize will always be greater as or equal to x,
+                                                          // which makes the cast safe
+            },
+        )
+        .1; // we are only interested in the water collected
+
+    // This time we calculate the water collected on the right side of the maximum elevation.
+    // We do this by iterating the terrain right to the max elevation applying the same fold operation in reverse order.
+    let water_capacity_right = terrain_right_of_max_elevation
+        .iter()
+        .rfold((i64::MIN, 0u64), |acc, &x| {
+            let stepsize = x.max(acc.0);
+            (stepsize, acc.1 + (stepsize - x) as u64)
+        })
+        .1;
+
+    water_capacity_left + water_capacity_right
+}
+
 /// fastest solution from leetcode
 pub fn trap(height: &[i64]) -> u64 {
     let (mut left, mut right) = (0, height.len() - 1);
