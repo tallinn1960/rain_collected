@@ -6,4 +6,5 @@ fn main() {
         .file("src/trap.cpp")
         .flag_if_supported("-std=c++20")
         .compile("libtrap.a");
+    println!("cargo:rerun-if-changed=src/trap.cpp");
 }

@@ -1,15 +1,15 @@
 #include <vector>
 #include <iterator>
+#include <random>
 #include <span>
 #include <algorithm>
 #include <numeric>
 #include <limits>
+#include <iostream>
 
 using namespace std;
 
-extern "C" {
-    unsigned long trap_cpp_ffi(long* height, size_t heightSize) {
-        std::span<long> v(height, heightSize);
+unsigned long trap_cpp(std::span<long> v) {
         if (v.size() < 3)
         {
             return 0;
@@ -35,18 +35,18 @@ extern "C" {
         return transform_reduce(cbegin(u), cend(u), cbegin(v), 0,
                                 std::plus<>(),
                                 std::minus<>());
+}
+
+extern "C" {
+    unsigned long trap_cpp_ffi(long* height, size_t heightSize) {
+        std::span<long> v(height, heightSize);
+        return trap_cpp(v);
     }
 }
 
 
-extern "C" {
-    // For some obscure reason, this is slow on macOS
-    // but not on Linux, where it is the fastest solution.
-    // Assembly code emitted by clang on macOS looks fine
-    // though and not different to that on Linux.
-    unsigned long trap_cpp_dp_ffi(long* height_a, size_t heightSize) {
-        std::span<long> height(height_a, heightSize);
-        size_t l = 0, r = height.size()-1;
+unsigned long trap_cpp_dp(std::span<long> height) {
+            size_t l = 0, r = height.size()-1;
         long level = std::numeric_limits<long>::min();
         unsigned long  water = 0;
         while (l < r) {
@@ -60,5 +60,16 @@ extern "C" {
             }
         }
         return water;
+}
+
+extern "C" {
+    // For some obscure reason, this is slow on macOS
+    // but not on Linux, where it is the fastest solution.
+    // Assembly code emitted by clang on macOS looks fine
+    // though and not different to that on Linux.
+    unsigned long trap_cpp_dp_ffi(long* height_a, size_t heightSize) {
+        std::span<long> height(height_a, heightSize);
+        return trap_cpp_dp(height);
     }
 }
+

@@ -2,7 +2,7 @@
 name = "rain_collected"
 version = "0.1.0"
 edition = "2021"
-
+links = "libtrap.a"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
@@ -13,8 +13,8 @@ libc = "0.2.101"
 criterion = "0.5.1"
 
 [build-dependencies]
-cmake = "0.1.50"
 cc = "1.0.67"
+bindgen = "0.69.4"
 
 [[bench]]
 name = "compute_rain_collected_trap"
