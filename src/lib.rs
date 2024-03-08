@@ -137,9 +137,12 @@ pub fn compute_rain_collected3(terrain: &[i64]) -> u64 {
         return 0;
     }
 
-    // Water + terrain create a stair up left to the maximum elevation and a stair down right to the maximum elevation.
-    // The elevation of each step of the stair is the maximum elevation seen so far walking towards the maximum elevation from either side.
-    // Water collected is determined by the difference between the elevation of the current step and the actual elevation.
+    // Water + terrain create a stair up left to the maximum elevation and a
+    // stair down right to the maximum elevation. The elevation of each step of
+    // the stair is the maximum elevation seen so far walking towards the
+    // maximum elevation from either side. Water collected is determined by the
+    // difference between the elevation of the current step and the actual
+    // elevation.
 
     let index_maximum = terrain
         .iter()
@@ -167,8 +170,9 @@ pub fn compute_rain_collected3(terrain: &[i64]) -> u64 {
         )
         .1; // we are only interested in the water collected
 
-    // This time we calculate the water collected on the right side of the maximum elevation.
-    // We do this by iterating the terrain right to the max elevation applying the same fold operation in reverse order.
+    // This time we calculate the water collected on the right side of the
+    // maximum elevation. We do this by iterating the terrain right to the max
+    // elevation applying the same fold operation in reverse order.
     let water_capacity_right = terrain_right_of_max_elevation
         .iter()
         .rfold((i64::MIN, 0u64), |acc, &x| {
@@ -219,6 +223,7 @@ pub fn trap_v(height: Vec<i64>) -> u64 {
 
     trapped
 }
+
 #[allow(unsafe_code)]
 /// fastest solution from leetcode, avoiding bounds checks
 pub fn trap_unsafe(height: &[i64]) -> u64 {
@@ -257,7 +262,10 @@ pub fn trap_cpp(v: &[i64]) -> u64 {
 
 #[link(name = "trap", kind = "static")]
 extern "C" {
-    fn trap_cpp_dp_ffi(v: *mut libc::c_long, size: libc::size_t) -> libc::c_ulong;
+    fn trap_cpp_dp_ffi(
+        v: *mut libc::c_long,
+        size: libc::size_t,
+    ) -> libc::c_ulong;
 }
 
 /// trap function from C++, dp version from leetcode

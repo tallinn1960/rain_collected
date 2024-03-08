@@ -40,6 +40,10 @@ extern "C" {
 
 
 extern "C" {
+    // For some obscure reason, this is slow on macOS
+    // but not on Linux, where it is the fastest solution.
+    // Assembly code emitted by clang on macOS looks fine
+    // though and not different to that on Linux.
     unsigned long trap_cpp_dp_ffi(long* height_a, size_t heightSize) {
         std::span<long> height(height_a, heightSize);
         size_t l = 0, r = height.size()-1;
