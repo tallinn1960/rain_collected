@@ -20,7 +20,7 @@ fn bench_compute_rain_collected_trap(c: &mut Criterion) {
     group.bench_function("trap_cpp_dp", |b| b.iter(|| trap_cpp_dp(&terrain)));
 
 
-    group.bench_function("compute_rain_collected2", |b| {
+    group.bench_function("compute_rain_collected_v", |b| {
         b.iter_batched(
             || terrain.clone(),
             |t| compute_rain_collected_v(t),
