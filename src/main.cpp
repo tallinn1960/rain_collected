@@ -2,6 +2,7 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <chrono>
 #include "trap.hpp"
 
 int main() {
