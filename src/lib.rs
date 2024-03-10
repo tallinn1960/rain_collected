@@ -21,47 +21,26 @@
 /// left and going down after that maximum to the right. So the goal is to calculate
 /// the size of the step corresponding to a given spot of the terrain left and right
 /// of the maximum elevation. The water collected on that spot is the difference
-/// between this stepsize and the actual elevation of the spot. If the maximum happens
-/// to be on the last spot of the terrain, the solution would be a simple fold operation,
-/// tracking the maxmium elevation seen while iterating over the spots from left to right,
-/// and summing over the water collected on each spot.
-///
-/// With the maximum elevation anywhere in the terrain, we could compute the solution by applying the fold
-/// operation to all spots left of the maximum in order and to all spots right of the maximum in reverse
-/// order. This would require us to find the position of the maximum elevation, split the terrain at that
-/// position and apply the fold operations to either side. That makes two full iterations over the
-/// terrain, one for finding the maximum position, the other for the two folds.
-///
+/// between this stepsize and the actual elevation of the spot. If the maximum elevation
+/// is the last spot of the terrain, we can calculate the water collected by iterating
+/// the terrain from left to right and applying a fold operation that keeps track of the
+/// stepsize and the water collected.
 pub fn compute_rain_collected(height: &[i64]) -> u64 {
-    let mut hiter = height.into_iter();
+    let mut height = height.into_iter();
 
     std::iter::repeat(())
-        // But we can also reorder the spots by looking at each
-        // spot left and right of the maximum using the
-        // DoubleEndedIterator trait methods next() and
-        // next_back(). We take the value given by each method,
-        // determine which one is the minimum, take that as the
-        // next value of the new sequence and advance just the
-        // corresponding end. scan will keep track of the
-        // values at both ends and emits the new sequence, ending
-        // it when both ends meet. This emits all spots just in a
-        // new order.
-        //
-        // We use the DoubleEndedIterator trait methods to avoid
-        // indexing the terrain, which would result in unnecessary
-        // range checks on the indices.  There would never be a
-        // range check panic using indices,  but the checks and
-        // branches are there and cost CPU time.
-        //
-        // This solution gives the most efficient assembly code
-        // and performs best.
-        .scan((hiter.next(), hiter.next_back()), |state, _| {
+        // We reorder the sequence of elevations by taking values
+        // from both ends of the terrain on a minimum first basis,
+        // advancing the iterator that points to the smaller value.
+        // This way we are guaranteed to have the maximum elevation
+        // as the last spot.
+        .scan((height.next(), height.next_back()), |state, _| {
             if let (Some(left), Some(right)) = *state {
                 if left <= right {
-                    *state = (hiter.next(), Some(right));
+                    *state = (height.next(), Some(right));
                     Some(left)
                 } else {
-                    *state = (Some(left), hiter.next_back());
+                    *state = (Some(left), height.next_back());
                     Some(right)
                 }
             } else {
@@ -70,11 +49,8 @@ pub fn compute_rain_collected(height: &[i64]) -> u64 {
         })
         // The newly ordered sequence traps the same amount of
         // water as the former one (yes, you got it, proof is left
-        // to the reader), but has the maximum as the
-        // last spot. We can then apply the fold operation
-        // described above for the "maximum is last" case. In
-        // an iterator pipeline this will iterate over the
-        // terrain only once.
+        // to the reader). We can now apply the fold operation
+        // described above for the "maximum is last" case.
         .fold(
             (
                 i64::MIN, // keeps track of the stepsize of the stair
