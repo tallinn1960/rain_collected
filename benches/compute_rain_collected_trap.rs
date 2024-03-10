@@ -7,7 +7,7 @@ use rain_collected::{
 };
 
 fn bench_compute_rain_collected_trap(c: &mut Criterion) {
-    const N: i64 = 100000;
+    const N: i64 = 10000000;
     let terrain: Vec<i64> = (0..N).map(|_| (rand::random::<i64>() % N)).collect();
     let mut group = c.benchmark_group("compute_rain_collected_trap");
     group.measurement_time(Duration::from_secs(6));
