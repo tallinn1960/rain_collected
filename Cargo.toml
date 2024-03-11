@@ -2,7 +2,8 @@
 name = "rain_collected"
 version = "0.1.0"
 edition = "2021"
-links = "libtrap.a"
+links = "trap"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
