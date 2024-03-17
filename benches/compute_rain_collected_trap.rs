@@ -3,12 +3,16 @@ use std::time::Duration;
 
 use criterion::{criterion_group, criterion_main, Criterion};
 use rain_collected::{
-    compute_rain_collected, compute_rain_collected_v, compute_rain_collected3, trap, trap_cpp, trap_cpp_dp, trap_unsafe, trap_v, trap_swift
+ compute_rain_collected, compute_rain_collected3, compute_rain_collected_v, trap, trap_unsafe, trap_v
 };
+
+use trap_cpp::{trap_cpp, trap_cpp_dp};
+use trap_swift::trap_swift;
 
 fn bench_compute_rain_collected_trap(c: &mut Criterion) {
     const N: i64 = 10000000;
-    let terrain: Vec<i64> = (0..N).map(|_| (rand::random::<i64>() % N)).collect();
+    let terrain: Vec<i64> =
+        (0..N).map(|_| (rand::random::<i64>() % N)).collect();
     let mut group = c.benchmark_group("compute_rain_collected_trap");
     group.measurement_time(Duration::from_secs(6));
     group.bench_function("compute_rain_collected", |b| {
@@ -19,7 +23,6 @@ fn bench_compute_rain_collected_trap(c: &mut Criterion) {
     group.bench_function("trap_cpp", |b| b.iter(|| trap_cpp(&terrain)));
     group.bench_function("trap_cpp_dp", |b| b.iter(|| trap_cpp_dp(&terrain)));
     group.bench_function("trap_swift", |b| b.iter(|| trap_swift(&terrain)));
-
 
     group.bench_function("compute_rain_collected_v", |b| {
         b.iter_batched(

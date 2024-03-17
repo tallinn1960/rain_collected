@@ -1,14 +1,16 @@
+workspace = { members = ["trap_cpp", "trap_swift"] }
+
 [package]
 name = "rain_collected"
 version = "0.1.0"
 edition = "2021"
-links = "trap_cpp trap_swift"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 rand = "0.8.4"
-libc = "0.2.101"
+trap_cpp = { path = "trap_cpp" }
+trap_swift = { path = "trap_swift" }
 
 [dev-dependencies]
 criterion = "0.5.1"

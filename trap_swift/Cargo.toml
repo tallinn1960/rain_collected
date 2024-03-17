@@ -1,0 +1,10 @@
+[package]
+name = "trap_swift"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+libc = "0.2.101"
+
+[build-dependencies]
+cmake = "0.1.45"
