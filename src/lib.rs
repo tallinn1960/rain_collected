@@ -225,7 +225,7 @@ pub fn trap_unsafe(height: &[i64]) -> u64 {
     trapped
 }
 
-#[link(name = "trap", kind = "static")]
+#[link(name = "trap_cpp", kind = "dylib")]
 extern "C" {
     fn trap_cpp_ffi(v: *mut libc::c_long, size: libc::size_t) -> libc::c_ulong;
 }
@@ -236,7 +236,7 @@ pub fn trap_cpp(v: &[i64]) -> u64 {
     unsafe { trap_cpp_ffi(v.as_ptr() as *mut libc::c_long, v.len()) }
 }
 
-#[link(name = "trap", kind = "static")]
+#[link(name = "trap_cpp", kind = "dylib")]
 extern "C" {
     fn trap_cpp_dp_ffi(
         v: *mut libc::c_long,
@@ -248,6 +248,18 @@ extern "C" {
 #[allow(unsafe_code)]
 pub fn trap_cpp_dp(v: &[i64]) -> u64 {
     unsafe { trap_cpp_dp_ffi(v.as_ptr() as *mut libc::c_long, v.len()) }
+}
+
+#[link(name = "trap_swift", kind = "static")]
+extern "C" {
+    fn rainCollected(v: *mut libc::c_long, size: libc::size_t)
+        -> libc::c_ulong;
+}
+
+#[allow(unsafe_code)]
+/// trap function from Swift
+pub fn trap_swift(v: &[i64]) -> u64 {
+    unsafe { rainCollected(v.as_ptr() as *mut libc::c_long, v.len()) }
 }
 
 #[cfg(test)]

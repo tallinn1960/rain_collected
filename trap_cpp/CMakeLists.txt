@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.28)
+project(trap CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+add_library(trap_cpp SHARED trap.cpp)
+target_include_directories(trap_cpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+install(TARGETS trap_cpp DESTINATION .)

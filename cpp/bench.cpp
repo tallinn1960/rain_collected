@@ -1,5 +1,4 @@
 #include <benchmark/benchmark.h>
-#include <numeric>
 #include <random>
 #include <vector>
 #include "trap.hpp"
@@ -9,12 +8,15 @@ extern "C" {
 }
 
 std::vector<long> random_terrain(int n) {
-  std::vector<long> v(n);
-  std::iota(v.begin(), v.end(), 0);
-  std::random_device rd;
-  std::mt19937 g(rd());
-  std::shuffle(v.begin(), v.end(), g);
-  return v;
+    // generate some random input ranging from 0 to 99999
+    std::vector<long> v(n);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<long> dis(0, 99999);
+    std::generate(v.begin(), v.end(), [&]() {
+        return dis(gen);
+    });
+    return v;
 }
 
 auto v = random_terrain(10000000);
