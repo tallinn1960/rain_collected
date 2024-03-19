@@ -4,11 +4,11 @@ import Dispatch
 // create a function to calculate the amount of rain collected
 // mark function as exported to c
 @_cdecl("rainCollected")
-public func rainCollected(_ heights: UnsafePointer<Int64>, _ count: Int) -> UInt64 {
+public func rainCollected(_ heights: UnsafePointer<Int64>, _ count: UInt64) -> UInt64 {
     var leftMax: Int64 = Int64.min
     var rightMax: Int64 = Int64.min
     var left = 0
-    var right = count - 1
+    var right = Int(count - 1)
     var collected: UInt64 = 0
 
     while left < right {

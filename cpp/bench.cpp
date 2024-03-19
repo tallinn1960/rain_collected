@@ -4,7 +4,7 @@
 #include "trap.hpp"
 
 extern "C" {
-    long rainCollected(long *p, long n);
+    uint64_t rainCollected(int64_t *p, uint64_t n);
 }
 
 std::vector<long> random_terrain(int n) {
@@ -20,6 +20,7 @@ std::vector<long> random_terrain(int n) {
 }
 
 auto v = random_terrain(10000000);
+auto v1 = std::vector<int64_t>(v.begin(), v.end());
 
 void BM_trap_cpp(benchmark::State &state) {
     for (auto _ : state)
@@ -33,7 +34,7 @@ void BM_trap_cpp_dp(benchmark::State &state) {
 
 void BM_trap_swift(benchmark::State &state) {
     for (auto _ : state)
-        rainCollected(v.data(), v.size());
+        rainCollected(v1.data(), v1.size());
 }
 
 BENCHMARK(BM_trap_cpp);
