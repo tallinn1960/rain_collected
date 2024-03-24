@@ -71,3 +71,30 @@ extern "C" {
     }
 }
 
+//fasted solution with minimum memory usage
+unsigned long compute_rain_collected(std::span<long> terrain) {
+    size_t n = terrain.size();
+    if (n < 3) {
+        return 0;
+    }
+
+    auto it = std::max_element(terrain.begin(), terrain.end());
+    auto index_maximum = std::distance(terrain.begin(), it);
+
+    long acc = 0;
+    unsigned long r1 = 0;
+    for (int i = 0; i < index_maximum; i++) {
+        acc = std::max(acc, terrain[i]);
+        r1 += acc - terrain[i];
+    }
+
+    unsigned long r2 = 0;
+    acc = 0;
+    for (int i = n - 1; i >= index_maximum; i--) {
+        acc = std::max(acc, terrain[i]);
+        r2 += acc - terrain[i];
+    }
+
+    return r1 + r2;
+                          
+}

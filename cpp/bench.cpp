@@ -32,6 +32,11 @@ void BM_trap_cpp_dp(benchmark::State &state) {
         trap_cpp_dp(v);
 }
 
+void BM_compute_rain_collected(benchmark::State &state) {
+    for (auto _ : state)
+        compute_rain_collected(v);
+}
+
 void BM_trap_swift(benchmark::State &state) {
     for (auto _ : state)
         rainCollected(v1.data(), v1.size());
@@ -39,4 +44,5 @@ void BM_trap_swift(benchmark::State &state) {
 
 BENCHMARK(BM_trap_cpp);
 BENCHMARK(BM_trap_cpp_dp);
+BENCHMARK(BM_compute_rain_collected);
 BENCHMARK(BM_trap_swift);
