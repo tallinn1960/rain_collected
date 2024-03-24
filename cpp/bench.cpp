@@ -46,3 +46,5 @@ BENCHMARK(BM_trap_cpp);
 BENCHMARK(BM_trap_cpp_dp);
 BENCHMARK(BM_compute_rain_collected);
 BENCHMARK(BM_trap_swift);
+
+BENCHMARK_MAIN();
