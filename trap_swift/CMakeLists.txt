@@ -12,5 +12,5 @@ if (CMAKE_SYSTEM_NAME)
     endif()
 endif()
 
-add_library(trap_swift SHARED rain_collected.swift)
+add_library(trap_swift STATIC rain_collected.swift)
 install(TARGETS trap_swift DESTINATION .)
