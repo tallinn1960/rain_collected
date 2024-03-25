@@ -1,6 +1,6 @@
 #![allow(missing_docs)]
 
-#[link(name = "trap_cpp", kind = "dylib")]
+#[link(name = "trap_cpp", kind = "static")]
 extern "C" {
     fn trap_cpp_ffi(v: *mut libc::c_long, size: libc::size_t) -> libc::c_ulong;
 }
@@ -11,7 +11,7 @@ pub fn trap_cpp(v: &[i64]) -> u64 {
     unsafe { trap_cpp_ffi(v.as_ptr() as *mut libc::c_long, v.len()) }
 }
 
-#[link(name = "trap_cpp", kind = "dylib")]
+#[link(name = "trap_cpp", kind = "static")]
 extern "C" {
     fn trap_cpp_dp_ffi(
         v: *mut libc::c_long,
