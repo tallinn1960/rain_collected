@@ -7,5 +7,5 @@ fn main() {
         .generator("Ninja Multi-Config")
         .build();
     println!("cargo:rustc-link-search=native={}", dst.display());
-    println!("cargo:rustc-link-lib=dylib=trap_swift");
+    println!("cargo:rustc-link-lib=static=trap_swift");
 }
