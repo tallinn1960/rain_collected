@@ -1,4 +1,5 @@
 #![allow(missing_docs)]
+extern crate link_cplusplus;
 
 #[link(name = "trap_cpp", kind = "static")]
 extern "C" {
