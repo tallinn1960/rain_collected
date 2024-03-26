@@ -1,4 +1,5 @@
 #![allow(missing_docs)]
+#![allow(unused_extern_crates)]
 extern crate link_cplusplus;
 
 #[link(name = "trap_cpp", kind = "static")]
