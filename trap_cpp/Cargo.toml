@@ -6,6 +6,7 @@ link = "trap_cpp"
 
 [dependencies]
 libc = "0.2.101"
+link-cplusplus = "1.0"
 
 [build-dependencies]
 cmake = "0.1.45"
