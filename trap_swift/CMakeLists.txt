@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.28)
-project(trap_swift Swift)
+project(trap_swift Swift CXX)
+
 if (CMAKE_SYSTEM_NAME)
     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         if(CMAKE_SYSTEM_PROCESSOR)
             if(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
                 set(CMAKE_Swift_FLAGS "${CMAKE_Swift_FLAGS} -target arm64-apple-macosx14")
-
             elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
                 set(CMAKE_Swift_FLAGS "${CMAKE_Swift_FLAGS} -target x86_64-apple-macosx14")
             endif()
@@ -14,4 +14,6 @@ if (CMAKE_SYSTEM_NAME)
 endif()
 
 add_library(trap_swift STATIC rain_collected.swift)
+target_compile_options(trap_swift PRIVATE "SHELL:-cxx-interoperability-mode=default -emit-objc-header-path ${CMAKE_CURRENT_SOURCE_DIR}/trap_swift.h -module-name trap_swift")
+target_include_directories(trap_swift PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 install(TARGETS trap_swift DESTINATION .)

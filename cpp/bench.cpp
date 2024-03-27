@@ -1,11 +1,8 @@
+#include "trap.hpp"
+#include "trap_swift.h"
 #include <benchmark/benchmark.h>
 #include <random>
 #include <vector>
-#include "trap.hpp"
-
-extern "C" {
-    uint64_t rainCollected(int64_t *p, uint64_t n);
-}
 
 std::vector<long> random_terrain(int n) {
     // generate some random input ranging from 0 to 99999
@@ -38,8 +35,9 @@ void BM_compute_rain_collected(benchmark::State &state) {
 }
 
 void BM_trap_swift(benchmark::State &state) {
-    for (auto _ : state)
-        rainCollected(v1.data(), v1.size());
+    for (auto _ : state) {
+        auto __ = trap_swift::rainCollected(v1.data(), v1.size());
+    };
 }
 
 BENCHMARK(BM_trap_cpp);

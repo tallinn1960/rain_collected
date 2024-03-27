@@ -6,9 +6,7 @@
 #include <chrono>
 #include "trap.hpp"
 
-extern "C" {
-    uint64_t rainCollected(int64_t *p, uint64_t n);
-}
+#include "trap_swift.h"
 
 int main() {
     // generate some random input of size 100000 ranging from 0 to 99999
@@ -31,7 +29,7 @@ int main() {
     std::cout << "Water: " << w << "\n";
 
     auto start2 = std::chrono::high_resolution_clock::now();
-    auto w2 = rainCollected(v1.data(), v1.size());
+    auto w2 = trap_swift::rainCollected(v1.data(), v1.size());
     auto end2 = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff2 = end2-start2;
     std::cout << "Time: " << diff2.count() * 1000000 << " micros\n";
