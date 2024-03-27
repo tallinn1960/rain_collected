@@ -5,3 +5,4 @@ target/
 build
 .idea
 src/trap
+trap_swift/trap_swift.h
