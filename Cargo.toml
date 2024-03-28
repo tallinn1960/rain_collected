@@ -9,6 +9,7 @@ edition = "2021"
 rand = "0.8.4"
 trap_cpp = { path = "trap_cpp" }
 trap_swift = { path = "trap_swift" }
+trap_rust = { path = "trap_rust" }
 
 [dev-dependencies]
 criterion = "0.5.1"

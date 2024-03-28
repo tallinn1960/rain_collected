@@ -4,8 +4,7 @@
 //! rain that can be trapped in the terrain.
 
 
-use rain_collected::compute_rain_collected;
-
+use trap_rust::compute_rain_collected;
 use trap_cpp::trap_cpp_dp;
 use trap_swift::trap_swift;
 

@@ -3,7 +3,35 @@
 //! representing the elevation of a spot, calculate the amount of
 //! rain that can be trapped in the terrain.
 
-
+/// C interface to compute_rain_collected
+/// # Safety
+/// The caller must ensure that the pointer is valid and points to a valid
+/// slice of integers.
+/// # Arguments
+/// * `height` - A pointer to a slice of integers representing the elevation of the terrain.
+/// * `len` - The length of the slice.
+/// # Returns
+/// The amount of rain that can be trapped in the terrain.
+/// # Example
+/// ```
+/// use trap_rust::compute_rain_collected_ffi;
+/// let terrain = [1, 4, 2, 5, 3, 6, 4, 7];
+/// let water_capacity = unsafe { compute_rain_collected_ffi(terrain.as_ptr(), terrain.len()) };
+/// assert_eq!(water_capacity, 6);
+/// ```
+/// # Note
+/// This function is a wrapper around the safe function compute_rain_collected.
+/// It is meant to be called from C code.
+/// ```c
+/// #include <stdint.h>
+/// uint64_t compute_rain_collected(int64_t *height, size_t len);
+/// ```
+#[allow(unsafe_code)]
+#[no_mangle]
+pub unsafe extern fn compute_rain_collected_ffi(height: *const i64, len: usize) -> u64 {
+    let slice = std::slice::from_raw_parts(height, len);
+    compute_rain_collected(slice)
+}
 
 /// Compute the amount of rain that can be trapped in the terrain.
 /// # Arguments
@@ -12,7 +40,7 @@
 /// The amount of rain that can be trapped in the terrain.
 /// # Example
 /// ```
-/// use rain_collected::compute_rain_collected;
+/// use trap_rust::compute_rain_collected;
 /// let terrain = [1, 4, 2, 5, 3, 6, 4, 7];
 /// let water_capacity = compute_rain_collected(&terrain);
 /// assert_eq!(water_capacity, 6);
@@ -73,7 +101,7 @@ pub fn compute_rain_collected(height: &[i64]) -> u64 {
 /// The amount of rain that can be trapped in the terrain.
 /// # Example
 /// ```
-/// use rain_collected::compute_rain_collected_v;
+/// use trap_rust::compute_rain_collected_v;
 /// let terrain = vec![1, 4, 2, 5, 3, 6, 4, 7];
 /// let water_capacity = compute_rain_collected_v(terrain);
 /// assert_eq!(water_capacity, 6);

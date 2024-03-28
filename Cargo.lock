@@ -358,6 +358,7 @@ dependencies = [
  "criterion",
  "rand",
  "trap_cpp",
+ "trap_rust",
  "trap_swift",
 ]
 
@@ -515,6 +516,10 @@ dependencies = [
  "libc",
  "link-cplusplus",
 ]
+
+[[package]]
+name = "trap_rust"
+version = "0.1.0"
 
 [[package]]
 name = "trap_swift"
