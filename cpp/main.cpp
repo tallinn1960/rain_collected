@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <chrono>
 #include "trap.hpp"
-
 #include "trap_swift.h"
 
 int main() {
