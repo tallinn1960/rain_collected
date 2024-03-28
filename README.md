@@ -5,6 +5,8 @@ are mixed together and called from each of those languages. This repository
 provides an example how to do that using cmake. Benchmarks for those functions
 are included using either the criterion crate or Google benchmark.
 
+The following instructions assume you have Rust installed by `rustup`.
+
 ## macOS installation
 
 To build and run the examples on macOS, one needs cmake and google benchmark 
