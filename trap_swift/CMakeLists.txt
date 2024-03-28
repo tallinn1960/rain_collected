@@ -14,12 +14,14 @@ if (CMAKE_SYSTEM_NAME)
 endif()
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/trap_swift.h
-    COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/trap_swift.h
     DEPENDS trap_swift
     COMMENT "Generating Swift header"
 )
+# this is for c++ code to depend on the swift header
 add_custom_target(trap_swift_header DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/trap_swift.h)
 add_library(trap_swift STATIC rain_collected.swift)
 target_compile_options(trap_swift PRIVATE "SHELL:-cxx-interoperability-mode=default -emit-objc-header-path ${CMAKE_CURRENT_BINARY_DIR}/trap_swift.h -module-name trap_swift")
 target_include_directories(trap_swift PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+# this is for rust to find the swift library
 install(TARGETS trap_swift DESTINATION .)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/trap_swift.h DESTINATION .)

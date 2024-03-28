@@ -8,4 +8,5 @@ link = "trap_swift"
 libc = "0.2.101"
 
 [build-dependencies]
-cmake = "0.1.45"
+cmake = "0.1.50"
+bindgen = "0.69.4"
