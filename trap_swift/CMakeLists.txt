@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(trap_swift Swift CXX)
+project(trap_swift Swift)
 
 if (CMAKE_SYSTEM_NAME)
     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
