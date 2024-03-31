@@ -28,14 +28,14 @@ fn bench_compute_rain_collected_trap(c: &mut Criterion) {
         b.iter_batched(
             || terrain.clone(),
             |t| compute_rain_collected_v(t),
-            criterion::BatchSize::LargeInput,
+            criterion::BatchSize::SmallInput,
         )
     });
     group.bench_function("trap_v", |b| {
         b.iter_batched(
             || terrain.clone(),
             |t| trap_v(t),
-            criterion::BatchSize::LargeInput,
+            criterion::BatchSize::SmallInput,
         )
     });
     group.bench_function("compute_rain_collected3", |b| {
