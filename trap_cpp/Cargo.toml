@@ -2,7 +2,6 @@
 name = "trap_cpp"
 version = "0.1.0"
 edition = "2021"
-link = "trap_cpp"
 
 [dependencies]
 libc = "0.2.101"
