@@ -10,7 +10,7 @@ fn main() {
         .build();
     println!("cargo:rustc-link-search=native={}", dst.display());
     println!("cargo:rustc-link-lib=static=trap_swift");
-        // The bindgen::Builder is the main entry point
+    // The bindgen::Builder is the main entry point
     // to bindgen, and lets you build up options for
     // the resulting bindings.
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());

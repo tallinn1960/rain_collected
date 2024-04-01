@@ -3,9 +3,8 @@
 //! representing the elevation of a spot, calculate the amount of
 //! rain that can be trapped in the terrain.
 
-
-use trap_rust::compute_rain_collected;
 use trap_cpp::trap_cpp_dp;
+use trap_rust::compute_rain_collected;
 use trap_swift::trap_swift;
 
 const N: i64 = 100000;

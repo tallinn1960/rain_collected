@@ -3,7 +3,8 @@ use std::time::Duration;
 
 use criterion::{criterion_group, criterion_main, Criterion};
 use trap_rust::{
- compute_rain_collected, compute_rain_collected3, compute_rain_collected_v, trap, trap_unsafe, trap_v
+    compute_rain_collected, compute_rain_collected3, compute_rain_collected_v,
+    trap, trap_unsafe, trap_v,
 };
 
 use trap_cpp::{trap_cpp, trap_cpp_dp};

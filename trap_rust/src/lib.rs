@@ -28,7 +28,10 @@
 /// ```
 #[allow(unsafe_code)]
 #[no_mangle]
-pub unsafe extern fn compute_rain_collected_ffi(height: *const i64, len: usize) -> u64 {
+pub unsafe extern "C" fn compute_rain_collected_ffi(
+    height: *const i64,
+    len: usize,
+) -> u64 {
     let slice = std::slice::from_raw_parts(height, len);
     compute_rain_collected(slice)
 }
@@ -107,33 +110,7 @@ pub fn compute_rain_collected(height: &[i64]) -> u64 {
 /// assert_eq!(water_capacity, 6);
 /// ```
 pub fn compute_rain_collected_v(height: Vec<i64>) -> u64 {
-    let mut hiter = height.into_iter();
-
-    std::iter::repeat(())
-        .scan((hiter.next(), hiter.next_back()), |state, _| {
-            if let (Some(left), Some(right)) = *state {
-                if left <= right {
-                    *state = (hiter.next(), Some(right));
-                    Some(left)
-                } else {
-                    *state = (Some(left), hiter.next_back());
-                    Some(right)
-                }
-            } else {
-                None
-            }
-        })
-        .fold(
-            (
-                i64::MIN, // keeps track of the stepsize of the stair
-                0u64,     // keeps track of the water collected
-            ),
-            |acc, x| {
-                let stepsize = x.max(acc.0);
-                (stepsize, acc.1 + (stepsize - x) as u64)
-            },
-        )
-        .1 // we are only interested in the water collected}
+    compute_rain_collected(&height)
 }
 
 /// previous solution
@@ -474,7 +451,4 @@ mod tests {
         let terrain11 = vec![0, -6, 0, -2, 8, -9, 0, 8, 9, -5];
         assert_eq!(trap_v(terrain11), 33);
     }
-
-
-  
 }
