@@ -9,14 +9,15 @@ The following instructions assume you have Rust installed by `rustup`.
 
 ## macOS installation
 
-To build and run the examples on macOS, one needs cmake and google benchmark 
-installed along with Xcode 15. Make sure that your Swift compiler version is at 
-least 5.9.
+To build and run the examples on macOS, one needs cmake, the ninja build tool and 
+google benchmark  installed along with Xcode 15. Make sure that your Swift 
+compiler version is at least 5.9.
 
-cmake and Google benchmark can be installed by HomeBrew:
+cmake, ninja and Google benchmark can be installed by HomeBrew:
 
 ```
 brew install cmake
+brew install ninja
 brew install google-benchmark
 ```
 
