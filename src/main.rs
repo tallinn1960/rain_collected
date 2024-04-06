@@ -13,7 +13,7 @@ fn main() {
     use std::time::Instant;
 
     let terrain: Vec<i64> =
-        (0..N).map(|_| (rand::random::<i64>() % N)).collect();
+        (0..N).map(|_| rand::random::<i64>() % N).collect();
 
     let start_time = Instant::now();
     let t1 = compute_rain_collected(&terrain);
