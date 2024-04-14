@@ -13,11 +13,21 @@ trap_rust = { path = "trap_rust" }
 
 [dev-dependencies]
 criterion = "0.5.1"
-
+iai-callgrind = "0.10.2"
 [build-dependencies]
 cc = "1.0.67"
 cmake = "0.1.45"
 
 [[bench]]
-name = "compute_rain_collected_trap"
+name = "criterion"
 harness = false
+
+[[bench]]
+name = "callgrind"
+harness = false
+
+[profile.bench]
+opt-level = 3
+lto = true
+debug = true
+strip = false

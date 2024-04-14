@@ -63,9 +63,9 @@ library.
 
 To run the demo using rust benchmarks the command is
 
-macOS : `cargo bench`
+macOS : `cargo bench --bench criterion`
 
-Linux: `CC=clang CXX=clang++ cargo bench`
+Linux: `CC=clang CXX=clang++ cargo bench --bench criterion`
 
 On Linux it is important to use clang from the Swift distribution. GCC won't work.
 
