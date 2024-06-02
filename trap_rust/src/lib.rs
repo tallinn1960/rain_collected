@@ -59,7 +59,7 @@ pub unsafe extern "C" fn compute_rain_collected_ffi(
 /// the terrain from left to right and applying a fold operation that keeps track of the
 /// stepsize and the water collected.
 pub fn compute_rain_collected(height: &[i64]) -> u64 {
-    let mut height = height.into_iter();
+    let mut height = height.into_iter().copied();
 
     std::iter::repeat(())
         // We reorder the sequence of elevations by taking values
@@ -89,7 +89,7 @@ pub fn compute_rain_collected(height: &[i64]) -> u64 {
                 i64::MIN, // keeps track of the stepsize of the stair
                 0u64,     // keeps track of the water collected
             ),
-            |acc, &x| {
+            |acc, x| {
                 let stepsize = x.max(acc.0);
                 (stepsize, acc.1 + (stepsize - x) as u64)
             },

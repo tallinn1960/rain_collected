@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.22)
 project(trap_swift Swift)
 
 if (CMAKE_SYSTEM_NAME)

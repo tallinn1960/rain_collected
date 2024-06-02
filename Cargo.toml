@@ -10,13 +10,11 @@ rand = "0.8.4"
 trap_cpp = { path = "trap_cpp" }
 trap_swift = { path = "trap_swift" }
 trap_rust = { path = "trap_rust" }
+trap_zig = { path = "trap_zig" }
 
 [dev-dependencies]
 criterion = "0.5.1"
 
-[build-dependencies]
-cc = "1.0.67"
-cmake = "0.1.45"
 
 [[bench]]
 name = "compute_rain_collected_trap"

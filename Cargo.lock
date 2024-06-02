@@ -481,13 +481,12 @@ dependencies = [
 name = "rain_collected"
 version = "0.1.0"
 dependencies = [
- "cc",
- "cmake",
  "criterion",
  "rand",
  "trap_cpp",
  "trap_rust",
  "trap_swift",
+ "trap_zig",
 ]
 
 [[package]]
@@ -680,6 +679,13 @@ version = "0.1.0"
 dependencies = [
  "bindgen",
  "cmake",
+ "libc",
+]
+
+[[package]]
+name = "trap_zig"
+version = "0.1.0"
+dependencies = [
  "libc",
 ]
 

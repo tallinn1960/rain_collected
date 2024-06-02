@@ -9,6 +9,7 @@ use trap_rust::{
 
 use trap_cpp::{trap_cpp, trap_cpp_dp};
 use trap_swift::trap_swift;
+use trap_zig::trap_zig_ffi;
 
 fn bench_compute_rain_collected_trap(c: &mut Criterion) {
     const N: i64 = 10000000;
@@ -24,6 +25,8 @@ fn bench_compute_rain_collected_trap(c: &mut Criterion) {
     group.bench_function("trap_cpp", |b| b.iter(|| trap_cpp(&terrain)));
     group.bench_function("trap_cpp_dp", |b| b.iter(|| trap_cpp_dp(&terrain)));
     group.bench_function("trap_swift", |b| b.iter(|| trap_swift(&terrain)));
+    group.bench_function("trap_zig", |b| b.iter(|| trap_zig_ffi(&terrain)));
+
 
     group.bench_function("compute_rain_collected_v", |b| {
         b.iter_batched(
