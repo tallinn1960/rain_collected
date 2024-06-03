@@ -6,6 +6,7 @@
 use trap_cpp::trap_cpp_dp;
 use trap_rust::compute_rain_collected;
 use trap_swift::trap_swift;
+use trap_zig::trap_zig_ffi;
 
 const N: i64 = 100000;
 
@@ -38,4 +39,15 @@ fn main() {
         execution_time
     );
     println!("Water capacity: {}", t1);
+
+    let start_time = Instant::now();
+    let t1 = trap_zig_ffi(&terrain);
+    let execution_time = start_time.elapsed().as_micros();
+
+    println!(
+        "Execution time trap_zig_ffi: {} microseconds",
+        execution_time
+    );
+    println!("Water capacity: {}", t1);
+    
 }
