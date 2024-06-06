@@ -16,6 +16,7 @@ compiler version is at least 5.9. As now Zig is included as well, make sure to h
 Zig installed. All is available by HomeBrew.
 
 cmake, ninja, Zig and Google benchmark can be installed by HomeBrew:
+
 ```
 brew install cmake
 brew install ninja
