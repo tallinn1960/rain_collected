@@ -15,8 +15,6 @@ google benchmark  installed along with Xcode 15. Make sure that your Swift
 compiler version is at least 5.9. As now Zig is included as well, make sure to have
 Zig installed. All is available by HomeBrew.
 
-cmake, ninja, Zig and Google benchmark can be installed by HomeBrew:
-
 ```
 brew install cmake
 brew install ninja
@@ -62,7 +60,8 @@ Unpack the tarball anywhere and add its `bin` directory to your `PATH`.
 Head over to the [Google Benchmark Repository](https://github.com/google/benchmark.git)
 and install the benchmark library from source. Make sure to use clang and clang++ 
 from the Swift tarball to build the library. Build the Release version of the
-library and install it following the instructions in the README.md file.
+library and **install** it following the instructions in the README.md file, 
+so cmake can find it.
 
 ### Install Zig
 Nothing special here. Just follow the instructions on the [Zig website](https://ziglang.org).
@@ -90,7 +89,10 @@ build/cpp/Release/trap_bench
 
 # Caveats
 
-This rep requires clang++ to build, but that doesn't do the trap_cp_dpp solution
-no good: it is much slower then compiled by clang++  than the rust solution. But that 
+This rep requires clang++ to build, but that doesn't do the trap_cp_dp solution
+no good: it is much slower compiled by clang++  than the Rust solution for some obscure reason. But that 
 is a flaw of clang++, not of the c++ solution. The c++ solution is as fast as the 
-rust solution when compiled with g++.
+Rust solution when compiled with g++. This is the one occasion I've encountered yet
+where g++ produces faster code than clang++. 
+
+
