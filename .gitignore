@@ -8,3 +8,4 @@ src/trap
 trap_swift/trap_swift.h
 trap_zig/zig-out
 trap_zig/zig-cache
+trap_zig/.zig-cache

@@ -1,3 +1,11 @@
+[workspace]
+members = [
+    "trap_cpp",
+    "trap_swift",
+    "trap_rust",
+    "trap_zig",
+]
+
 [package]
 name = "rain_collected"
 version = "0.1.0"
