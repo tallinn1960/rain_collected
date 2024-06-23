@@ -1,5 +1,4 @@
 import Foundation
-import Dispatch
 
 // create a function to calculate the amount of rain collected
 @_cdecl("rainCollected") // necessary yet to provide rust interface
