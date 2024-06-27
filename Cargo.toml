@@ -16,13 +16,16 @@ edition = "2021"
 [dependencies]
 rand = "0.8.4"
 trap_cpp = { path = "trap_cpp" }
-trap_swift = { path = "trap_swift" }
+trap_swift = { path = "trap_swift" , optional = true}
 trap_rust = { path = "trap_rust" }
 trap_zig = { path = "trap_zig" }
 
 [dev-dependencies]
 criterion = "0.5.1"
 
+[features]
+default = []
+swift = ["trap_swift"]
 
 [[bench]]
 name = "compute_rain_collected_trap"
